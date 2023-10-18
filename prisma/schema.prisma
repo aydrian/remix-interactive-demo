@@ -10,12 +10,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username     String  @unique
-  passwordHash String? @map("password_hash")
-  firstName    String  @map("first_name")
-  lastName     String  @map("last_name")
+// model User {
+//   id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   username     String  @unique
+//   passwordHash String? @map("password_hash")
+//   firstName    String  @map("first_name")
+//   lastName     String  @map("last_name")
 
-  @@map("users")
+//   @@map("users")
+// }
+model Dropper {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pseudonym String   @default("Anonymous")
+  emoji     String   @default("👻")
+  createdAt DateTime @default(now()) @map("creatd_at") @db.Timestamptz(6)
+
+  emojiDrops EmojiDrop[]
+
+  @@map("droppers")
+}
+
+model EmojiDrop {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  emoji            String
+  droppedBy        String   @map("dropped_by") @db.Uuid
+  uaBrowserName    String?  @map("ua_browser_name")
+  uaBrowserVersion String?  @map("ua_browser_version")
+  uaDeviceType     String?  @map("ua_device_type")
+  uaDeviceVendor   String?  @map("ua_device_vendor")
+  uaDeviceModel    String?  @map("ua_device_model")
+  uaOSName         String?  @map("ua_os_name")
+  uaOSVersion      String?  @map("ua_os_version")
+  createdAt        DateTime @default(now()) @map("creatd_at") @db.Timestamptz(6)
+
+  dropper Dropper @relation(fields: [droppedBy], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@map("emoji_drops")
 }

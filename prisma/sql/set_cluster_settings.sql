@@ -1,0 +1,1 @@
+SET CLUSTER SETTING changefeed.new_webhook_sink_enabled = true;

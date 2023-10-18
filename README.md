@@ -57,5 +57,5 @@ cp -R ../my-old-remix-app/app app
 
 ## 📝 License
 
-Copyright © 2023 [Cockroach Labs](https://cockroachlabs.com). <br />
+Copyright © 2023 [ItsAydrian Consulting](https://itsaydrian.com). <br />
 This project is [MIT](./LICENSE) licensed.
