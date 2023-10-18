@@ -1,7 +1,7 @@
-CREATE CHANGEFEED INTO 'webhook-https://remix-interactive-demo.fly.dev/resources/crl-cdc-webhook?insecure_tls_skip_verify=true' AS
+CREATE CHANGEFEED INTO 'webhook-https://remix-interactive-demo.fly.dev/resources/emoji-drop?insecure_tls_skip_verify=true' AS
 SELECT
   emoji,
-  dropped_by,
-  uaDeviceVendor,
-  uaDeviceModel
+  dropped_by "droppedBy",
+  ua_device_vendor "uaDeviceVendor",
+  ua_device_model "uaDeviceModel"
 FROM emoji_drops;

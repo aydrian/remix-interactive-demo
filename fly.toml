@@ -1,5 +1,5 @@
 app = "remix-interactive-demo"
-primary_region = "iad"
+primary_region = "ewr"
 
 [http_service]
 internal_port = 3000
