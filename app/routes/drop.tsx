@@ -6,7 +6,7 @@ import {
   json
 } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
-import confetti from "canvas-confetti";
+import { redirectWithSuccess } from "remix-toast";
 import UAParser from "ua-parser-js";
 import { z } from "zod";
 
@@ -85,7 +85,10 @@ export async function action({ request }: ActionFunctionArgs) {
       }
     }
   });
-  return json({ status: "success", submission } as const);
+  return redirectWithSuccess(
+    "/drop",
+    `Your ${submission.value.emoji} is being dropped.`
+  );
 }
 export default function Drop() {
   // const rootLoaderData = useRootLoaderData();
@@ -102,19 +105,6 @@ export default function Drop() {
     },
     shouldRevalidate: "onBlur"
   });
-
-  if (fetcher.data?.status === "success") {
-    if (fetcher.data.submission.value?.emoji) {
-      //@ts-ignore
-      const emoji = confetti.shapeFromText({
-        text: fetcher.data.submission.value?.emoji
-      });
-
-      confetti({ scalar: 2, shapes: [emoji] });
-    } else {
-      confetti();
-    }
-  }
 
   return (
     <div>

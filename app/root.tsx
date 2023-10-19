@@ -12,10 +12,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
   useRouteLoaderData
 } from "@remix-run/react";
 import crypto from "node:crypto";
 import randomAnimalName from "random-animal-name";
+import { useEffect } from "react";
+import { ToastContainer, toast as notify } from "react-toastify";
+import toastStyles from "react-toastify/dist/ReactToastify.css";
+import { getToast } from "remix-toast";
 
 import iconHref from "~/components/icons/sprite.svg";
 import styles from "~/tailwind.css";
@@ -24,6 +29,8 @@ import { Icon } from "./components/icon.tsx";
 import { commitSession, getSession } from "./utils/session.server.ts";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  // Extracts the toast from the request
+  const { headers, toast } = await getToast(request);
   const session = await getSession(request.headers.get("Cookie"));
   let id = session.get("userId");
   if (!id) {
@@ -38,10 +45,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
         emoji: session.get("emoji") ?? "👻",
         pseudonym: session.get("pseudonym") || "Anonymous",
         userId: id
-      }
+      },
+      toast
     },
     {
       headers: {
+        ...headers,
         "Set-Cookie": await commitSession(session)
       }
     }
@@ -62,10 +71,21 @@ export const links: LinksFunction = () => [
   { as: "style", href: styles, rel: "preload" },
   { href: "/fonts/poppins/font.css", rel: "stylesheet" },
   { href: styles, rel: "stylesheet" },
+  { href: toastStyles, rel: "stylesheet" },
   ...(cssBundleHref ? [{ href: cssBundleHref, rel: "stylesheet" }] : [])
 ];
 
 export default function App() {
+  const { toast } = useLoaderData<typeof loader>();
+
+  // Hook to show the toasts
+  useEffect(() => {
+    if (toast) {
+      // notify on a toast message
+      notify(toast.message, { type: toast.type });
+    }
+  }, [toast]);
+
   return (
     <html lang="en">
       <head>
@@ -106,6 +126,7 @@ export default function App() {
             </a>
           </div>
         </footer>
+        <ToastContainer position="bottom-center" theme="colored" />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
