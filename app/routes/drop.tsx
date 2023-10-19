@@ -68,23 +68,27 @@ export async function action({ request }: ActionFunctionArgs) {
     return json({ status: "idle", submission } as const);
   }
 
-  await prisma.emojiDrop.create({
-    data: {
-      ...submission.value,
-      dropper: {
-        connectOrCreate: {
-          create: {
-            emoji: session.get("emoji"),
-            id: session.get("userId"),
-            pseudonym: session.get("pseudonym")
-          },
-          where: {
-            id: session.get("userId")
+  await prisma.emojiDrop
+    .create({
+      data: {
+        ...submission.value,
+        dropper: {
+          connectOrCreate: {
+            create: {
+              emoji: session.get("emoji"),
+              id: session.get("userId"),
+              pseudonym: session.get("pseudonym")
+            },
+            where: {
+              id: session.get("userId")
+            }
           }
         }
       }
-    }
-  });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   return redirectWithSuccess(
     "/drop",
     `Your ${submission.value.emoji} is being dropped.`

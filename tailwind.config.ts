@@ -1,7 +1,5 @@
 import type { Config } from "tailwindcss";
 
-import * as crlTheme from "./crl-theme.ts";
-
 export default {
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -40,7 +38,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))"
         },
-        crl: crlTheme.colors,
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))"

@@ -140,7 +140,6 @@ export function EmojiDrop({
 
     const render = Render.create({
       canvas,
-      // element: "div",
       engine: engine,
       options: {
         background: "transparent",
